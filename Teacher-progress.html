@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Progress</title>
+  <style>
+    body { font-family: Arial; background: linear-gradient(135deg, #dff5e1, #fff6cc); display: flex; justify-content: center; padding: 50px; }
+    .container { background: white; padding: 30px; border-radius: 20px; width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    h1 { color: #2e7d32; text-align: center; }
+    .student-row { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #eee; }
+    .status-badge { font-weight: bold; padding: 4px 10px; border-radius: 5px; font-size: 0.8rem; }
+    .pending { color: #c62828; background: #ffebee; }
+    .submitted { color: #2e7d32; background: #e8f5e9; }
+    .back-btn { margin-top: 20px; width: 100%; padding: 10px; border: none; border-radius: 10px; background: #eee; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Student Progress</h1>
+  <div id="progressContent"></div>
+  <button class="back-btn" onclick="window.location.href='index.html'">Back to Dashboard</button>
+</div>
+
+<script>
+  function loadProgress() {
+    const students = JSON.parse(localStorage.getItem("registeredStudents")) || [];
+    const container = document.getElementById("progressContent");
+
+    if (students.length === 0) {
+      container.innerHTML = "<p style='text-align:center; color:#999;'>No students registered yet.</p>";
+      return;
+    }
+
+    container.innerHTML = students.map(s => `
+      <div class="student-row">
+        <div>
+          <strong>${s.name}</strong><br>
+          <small style="color:#777">${s.email}</small>
+        </div>
+        <span class="status-badge ${s.status.toLowerCase()}">${s.status}</span>
+      </div>
+    `).join('');
+  }
+
+  loadProgress();
+</script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoScientia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Notable&family=Quattrocento:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Styling remains consistent with your theme */
+    * { box-sizing: border-box; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
+    body { margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #dff5e1, #fff6cc); }
+    .container { background: #ffffff; width: 450px; border-radius: 20px; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12); padding: 30px; margin: 20px; }
+    h1 { text-align: center; margin-bottom: 5px; color: #2e7d32; font-size: 2.2rem; }
+    h3 { color: #2e7d32; border-bottom: 2px solid #a5d6a7; padding-bottom: 5px; margin-top: 20px; }
+    .subtitle { text-align: center; color: #777; margin-bottom: 25px; font-size: 0.95rem; }
+    
+    .tabs { display: flex; margin-bottom: 20px; }
+    .tab { flex: 1; text-align: center; padding: 12px; cursor: pointer; border-radius: 12px; font-weight: 600; background: #f2f2f2; margin: 0 5px; transition: 0.3s; }
+    .tab.active { background: #c8e6c9; color: #2e7d32; }
+    
+    .role-switch { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+    .role-switch button { padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; background: #eeeeee; font-weight: 600; }
+    .role-switch button.active { background: #ffecb3; color: #8d6e00; }
+
+    form { display: none; }
+    form.active { display: block; }
+    input, select, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #ccc; font-size: 1rem; }
+    
+    .submit-btn { width: 100%; padding: 12px; border: none; border-radius: 12px; background: linear-gradient(135deg, #a5d6a7, #fff59d); font-weight: 700; cursor: pointer; color: #2e7d32; margin-top: 10px; }
+    
+    .dashboard { display: none; }
+
+    /* Feedback UI */
+    .notification-badge { background: #ff5252; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; margin-left: 10px; }
+    .feedback-card { background: #fff9c4; padding: 15px; border-radius: 10px; border-left: 5px solid #fbc02d; margin-top: 10px; font-size: 0.9rem; }
+    .chapter-tag { background: #2e7d32; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; margin-bottom: 5px; display: inline-block; }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="authContainer">
+    <h1>EcoScientia</h1>
+    <div class="subtitle">SEL Learning Module</div>
+    
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('login')">Login</div>
+      <div class="tab" onclick="switchTab('signup')">Sign Up</div>
+    </div>
+    
+    <div class="role-switch">
+      <button class="active" onclick="switchRole('student', this)">Student</button>
+      <button onclick="switchRole('teacher', this)">Teacher</button>
+    </div>
+
+    <form id="login" class="active">
+      <input type="email" id="loginEmail" placeholder="Email" required />
+      <input type="password" placeholder="Password" required />
+      <button class="submit-btn" type="submit">Login</button>
+    </form>
+
+    <form id="signup">
+      <input type="text" id="regName" placeholder="Full Name" required />
+      <input type="email" id="regEmail" placeholder="Email" required />
+      <input type="password" placeholder="Password" required />
+      <button class="submit-btn" type="submit">Create Account</button>
+    </form>
+  </div>
+
+  <div class="container dashboard" id="studentDashboard">
+    <h1>Student Portal</h1>
+    <div class="subtitle" id="welcomeStudent">Welcome back! 🌱</div>
+    
+    <h3>Activity Feedback <span id="notifCount" class="notification-badge" style="display:none;">0</span></h3>
+    <div id="studentFeedbackList">
+      <p style="color:#999; font-size: 0.8rem;">No feedback received yet.</p>
+    </div>
+
+    <h3>My Learning</h3>
+    <button class="submit-btn" onclick="window.location.href='student-assignments.html'">Open Chapters</button>
+    <button class="submit-btn" style="background: #eee; color: #666; margin-top: 20px;" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="container dashboard" id="teacherDashboard">
+    <h1>Teacher Portal</h1>
+    <div class="subtitle">Activity Management 🌍</div>
+
+    <h3>Class & Progress</h3>
+    <button class="submit-btn" style="background: #ffecb3;" onclick="window.location.href='teacher-classes.html'">My Classes</button>
+    <button class="submit-btn" onclick="window.location.href='teacher-progress.html'">View Student Progress</button>
+
+    <h3>Send Chapter Feedback</h3>
+    <select id="feedbackStudentSelect">
+      <option value="">Select a Student</option>
+    </select>
+    
+    <select id="feedbackChapterSelect">
+      <option value="Chapter 1: Protect and Neglect?">Chapter 1: Protect and Neglect?</option>
+      <option value="Chapter 2: Which or Which?">Chapter 2: Which or Which?</option>
+      <option value="Chapter 3: Show and Tell">Chapter 3: Show and Tell</option>
+      <option value="Chapter 4: My Town, My Rule">Chapter 4: My Town, My Rule</option>
+      <option value="Chapter 5: Ecosystem Pledge Wall">Chapter 5: Ecosystem Pledge Wall</option>
+    </select>
+
+    <textarea id="feedbackText" placeholder="Write feedback for this chapter activity..."></textarea>
+    <button class="submit-btn" onclick="sendFeedback()">Submit Feedback</button>
+
+    <button class="submit-btn" style="background: #eee; color: #666; margin-top: 20px;" onclick="logout()">Logout</button>
+  </div>
+
+<script>
+  let currentRole = 'student';
+  let currentUser = null;
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('form').forEach(f => f.classList.remove('active'));
+    tab === 'login' ? document.querySelectorAll('.tab')[0].classList.add('active') : document.querySelectorAll('.tab')[1].classList.add('active');
+    document.getElementById(tab).classList.add('active');
+  }
+
+  function switchRole(role, btn) {
+    currentRole = role;
+    document.querySelectorAll('.role-switch button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function showDashboard(userData) {
+    currentUser = userData;
+    document.getElementById('authContainer').style.display = 'none';
+    
+    if (currentRole === 'student') {
+      document.getElementById('studentDashboard').style.display = 'block';
+      document.getElementById('welcomeStudent').innerText = `Welcome back, ${userData.name}! 🌱`;
+      renderStudentFeedback();
+    } else {
+      document.getElementById('teacherDashboard').style.display = 'block';
+      populateTeacherDropdowns();
+    }
+  }
+
+  function logout() { location.reload(); }
+
+  function populateTeacherDropdowns() {
+    const students = JSON.parse(localStorage.getItem("registeredStudents")) || [];
+    const select = document.getElementById("feedbackStudentSelect");
+    select.innerHTML = '<option value="">Select a Student</option>';
+    students.forEach(s => {
+      select.innerHTML += `<option value="${s.name}">${s.name}</option>`;
+    });
+  }
+
+  function sendFeedback() {
+    const student = document.getElementById("feedbackStudentSelect").value;
+    const chapter = document.getElementById("feedbackChapterSelect").value;
+    const msg = document.getElementById("feedbackText").value;
+    
+    if(!student || !msg) return alert("Please fill all fields!");
+
+    let feedbackList = JSON.parse(localStorage.getItem("studentFeedback")) || [];
+    feedbackList.push({ student, chapter, msg, date: new Date().toLocaleDateString() });
+    localStorage.setItem("studentFeedback", JSON.stringify(feedbackList));
+    
+    alert(`Feedback for ${chapter} sent to ${student}!`);
+    document.getElementById("feedbackText").value = "";
+  }
+
+  function renderStudentFeedback() {
+    const feedbackList = JSON.parse(localStorage.getItem("studentFeedback")) || [];
+    const container = document.getElementById("studentFeedbackList");
+    const badge = document.getElementById("notifCount");
+    
+    const myFeedback = feedbackList.filter(f => f.student === currentUser.name);
+    
+    if(myFeedback.length > 0) {
+      badge.style.display = "inline";
+      badge.textContent = myFeedback.length;
+      container.innerHTML = myFeedback.map(f => `
+        <div class="feedback-card">
+          <div class="chapter-tag">${f.chapter}</div><br>
+          <strong>Teacher:</strong> ${f.msg} <br>
+          <small style="color:#777">${f.date}</small>
+        </div>
+      `).reverse().join('');
+    }
+  }
+
+  document.getElementById('signup').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name = document.getElementById('regName').value;
+    const email = document.getElementById('regEmail').value;
+
+    if (currentRole === 'student') {
+      let students = JSON.parse(localStorage.getItem("registeredStudents")) || [];
+      students.push({ name, email, status: "Pending" });
+      localStorage.setItem("registeredStudents", JSON.stringify(students));
+    }
+    showDashboard({ name, email });
+  });
+
+  document.getElementById('login').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    let students = JSON.parse(localStorage.getItem("registeredStudents")) || [];
+    let user = students.find(s => s.email === email) || { name: "Guest", email: email };
+    showDashboard(user);
+  });
+</script>
+</body>
+</html>
